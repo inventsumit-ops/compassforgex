@@ -1,5 +1,10 @@
+"use client"
 import Layout from "@/components/Layout";
 import { TrendingUp, TrendingDown, Bell, Clock, Target } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import signalsmainImage from "../../assest/images/mainpageimage.png"
+import signalsmainImagedark from "../../assest/images/mainpageimagedark.png"
 
 const activeSignals = [
   {
@@ -79,17 +84,50 @@ const features = [
 ];
 
 export default function SignalsPage() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+      const updateTheme = () => {
+        if (typeof document !== "undefined") {
+          setIsDark(document.documentElement.classList.contains("dark"));
+        }
+      };
+  
+      updateTheme();
+  
+      const observer = new MutationObserver(updateTheme);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+  
+      return () => observer.disconnect();
+    }, []);
+
   return (
     <Layout>
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="py-20 md:py-32 hero-gradient">
+        <section className="py-20 md:py-32 hero-gradient"
+         style={{
+          backgroundImage: `url(${
+            isDark ? signalsmainImagedark.src : signalsmainImage.src
+          })`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "top center",
+          backgroundSize: "cover",
+        }}
+        >
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-6">
+              <h1 className={`font-display text-4xl md:text-6xl font-bold mb-6 ${
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+              }`}>
                 Trading Signals
               </h1>
-              <p className="text-xl text-primary-foreground/80 leading-relaxed">
+              <p className={`text-xl leading-relaxed ${
+                isDark ? "text-white/90 drop-shadow-md" : "text-gray-900"
+              }`}>
                 Professional trading signals based on technical analysis and market research.
               </p>
             </div>
@@ -97,15 +135,15 @@ export default function SignalsPage() {
         </section>
 
         {/* Stats */}
-        <section className="py-12 border-b border-border">
+        <section className={`py-12 border-b ${isDark ? "border-gray-700" : "border-emerald-200"}`}>
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {signalStats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="font-display text-3xl md:text-4xl font-bold text-primary mb-2">
+                  <div className={`font-display text-3xl md:text-4xl font-bold mb-2 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`}>
                     {stat.value}
                   </div>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -116,59 +154,65 @@ export default function SignalsPage() {
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-8">
+              <h2 className={`font-display text-3xl md:text-4xl font-bold mb-8 ${
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+              }`}>
                 Active Trading Signals
               </h2>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {activeSignals.map((signal, index) => (
-                  <div key={index} className={`bg-card border rounded-xl p-6 shadow-card hover:shadow-elevated transition-shadow ${
-                    signal.type === 'Buy' ? 'border-green-500' : 'border-red-500'
+                  <div key={index} className={`rounded-xl p-6 transition-shadow ${
+                    signal.type === 'Buy' 
+                      ? (isDark ? 'bg-gray-800/50 border-green-500/30 hover:shadow-lg' : 'bg-emerald-50 border-emerald-300 hover:shadow-md')
+                      : (isDark ? 'bg-gray-800/50 border-red-500/30 hover:shadow-lg' : 'bg-red-50 border-red-300 hover:shadow-md')
                   }`}>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-                          signal.type === 'Buy' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                          signal.type === 'Buy' 
+                            ? (isDark ? 'bg-green-500 text-white' : 'bg-emerald-600 text-white')
+                            : (isDark ? 'bg-red-500 text-white' : 'bg-red-600 text-white')
                         }`}>
                           {signal.type}
                         </span>
-                        <span className="font-display text-lg font-bold text-foreground">
+                        <span className={`font-display text-lg font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
                           {signal.pair}
                         </span>
                       </div>
                       <div className="flex items-center gap-1">
                         <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          signal.confidence === 'High' ? 'bg-green-100 text-green-800' :
-                          signal.confidence === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-gray-100 text-gray-800'
+                          signal.confidence === 'High' 
+                            ? (isDark ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-800')
+                            : (isDark ? 'bg-yellow-900/30 text-yellow-400' : 'bg-yellow-100 text-yellow-800')
                         }`}>
                           {signal.confidence}
                         </span>
-                        <span className="text-xs text-muted-foreground">{signal.time}</span>
+                        <span className={`text-xs ${isDark ? "text-gray-400" : "text-gray-600"}`}>{signal.time}</span>
                       </div>
                     </div>
                     
                     <div className="grid grid-cols-4 gap-4 mb-4">
                       <div>
-                        <p className="text-xs text-muted-foreground mb-1">Entry</p>
-                        <p className="font-semibold text-foreground">{signal.entry}</p>
+                        <p className={`text-xs mb-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}>Entry</p>
+                        <p className={`font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>{signal.entry}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-1">Stop Loss</p>
-                        <p className="font-semibold text-red-600">{signal.stopLoss}</p>
+                        <p className={`text-xs mb-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}>Stop Loss</p>
+                        <p className={`font-semibold ${isDark ? "text-red-400" : "text-red-600"}`}>{signal.stopLoss}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-1">Take Profit</p>
-                        <p className="font-semibold text-green-600">{signal.takeProfit}</p>
+                        <p className={`text-xs mb-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}>Take Profit</p>
+                        <p className={`font-semibold ${isDark ? "text-green-400" : "text-green-600"}`}>{signal.takeProfit}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-1">Risk/Reward</p>
-                        <p className="font-semibold text-foreground">{signal.riskReward}</p>
+                        <p className={`text-xs mb-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}>Risk/Reward</p>
+                        <p className={`font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>{signal.riskReward}</p>
                       </div>
                     </div>
                     
-                    <div className="bg-muted/50 rounded-lg p-3">
-                      <p className="text-sm text-muted-foreground">
+                    <div className={`rounded-lg p-3 ${isDark ? "bg-gray-700/50" : "bg-muted/50"}`}>
+                      <p className={`text-sm ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                         <span className="font-medium">Reason:</span> {signal.reason}
                       </p>
                     </div>
@@ -183,19 +227,23 @@ export default function SignalsPage() {
         <section className="py-20 bg-secondary/50">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-12">
+              <h2 className={`font-display text-3xl md:text-4xl font-bold mb-12 ${
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+              }`}>
                 Signal Features
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {features.map((feature, index) => (
                   <div key={index} className="text-center">
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <feature.icon className="h-8 w-8 text-primary" />
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                      isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
+                    }`}>
+                      <feature.icon className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
                     </div>
-                    <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                    <h3 className={`font-display text-lg font-semibold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>
                       {feature.title}
                     </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
+                    <p className={`text-sm leading-relaxed ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                       {feature.description}
                     </p>
                   </div>
@@ -209,22 +257,24 @@ export default function SignalsPage() {
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-8">
+              <h2 className={`font-display text-3xl md:text-4xl font-bold mb-8 ${
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+              }`}>
                 Signal Performance
               </h2>
-              <div className="bg-card border border-border rounded-xl p-8">
+              <div className={`rounded-xl p-8 ${isDark ? "bg-gray-800/50 border border-gray-700" : "bg-card border border-emerald-200"}`}>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-green-600 mb-2">72%</div>
-                    <p className="text-sm text-muted-foreground">Success Rate</p>
+                    <div className={`text-4xl font-bold mb-2 ${isDark ? "text-green-400" : "text-green-600"}`}>72%</div>
+                    <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>Success Rate</p>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-primary mb-2">+125</div>
-                    <p className="text-sm text-muted-foreground">Average Pips per Signal</p>
+                    <div className={`text-4xl font-bold mb-2 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`}>+125</div>
+                    <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>Average Pips per Signal</p>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-foreground mb-2">850</div>
-                    <p className="text-sm text-muted-foreground">Total Pips This Month</p>
+                    <div className={`text-4xl font-bold mb-2 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`}>850</div>
+                    <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>Total Pips This Month</p>
                   </div>
                 </div>
               </div>
@@ -236,17 +286,27 @@ export default function SignalsPage() {
         <section className="py-16 hero-gradient">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+              <h2 className={`font-display text-3xl md:text-4xl font-bold mb-4 ${
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+              }`}>
                 Get Trading Signals
               </h2>
-              <p className="text-primary-foreground/80 mb-8">
+              <p className={`mb-8 ${isDark ? "text-white/90" : "text-gray-900"}`}>
                 Join thousands of traders using our signals to improve their trading performance.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button className="bg-background text-foreground px-8 py-3 rounded-lg font-semibold hover:bg-background/90 transition-colors">
+                <button className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
+                  isDark 
+                    ? "bg-[#f5c542] hover:bg-[#d4a938] text-gray-900" 
+                    : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                }`}>
                   Start Free Trial
                 </button>
-                <button className="border border-primary-foreground/30 text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-primary-foreground/10 transition-colors">
+                <button className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
+                  isDark 
+                    ? "border border-[#f5c542]/30 text-[#f5c542] hover:bg-[#f5c542]/10" 
+                    : "border border-emerald-600/30 text-emerald-600 hover:bg-emerald-50"
+                }`}>
                   View Performance
                 </button>
               </div>
