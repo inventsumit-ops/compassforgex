@@ -1,5 +1,10 @@
+"use client"
 import Layout from "@/components/Layout";
 import { HelpCircle, MessageSquare, Shield, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import faqmainImage from "../../assest/images/mainpageimage.png"
+import faqmainImagedark from "../../assest/images/mainpageimagedark.png"
 
 const faqs = [
   {
@@ -85,17 +90,50 @@ const faqs = [
 const categories = ["All", "Getting Started", "Account", "Trading", "Deposits & Withdrawals", "Safety & Security", "Support", "Education"];
 
 export default function FAQPage() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+      const updateTheme = () => {
+        if (typeof document !== "undefined") {
+          setIsDark(document.documentElement.classList.contains("dark"));
+        }
+      };
+  
+      updateTheme();
+  
+      const observer = new MutationObserver(updateTheme);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+  
+      return () => observer.disconnect();
+    }, []);
+
   return (
     <Layout>
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="py-20 md:py-32 hero-gradient">
+        <section className="py-20 md:py-32 hero-gradient"
+         style={{
+          backgroundImage: `url(${
+            isDark ? faqmainImagedark.src : faqmainImage.src
+          })`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "top center",
+          backgroundSize: "cover",
+        }}
+        >
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-6">
+              <h1 className={`font-display text-4xl md:text-6xl font-bold mb-6 ${
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+              }`}>
                 Frequently Asked Questions
               </h1>
-              <p className="text-xl text-primary-foreground/80 leading-relaxed">
+              <p className={`text-xl leading-relaxed ${
+                isDark ? "text-white/90 drop-shadow-md" : "text-gray-900"
+              }`}>
                 Find answers to common questions about forex trading and CompassForex.
               </p>
             </div>
@@ -103,7 +141,7 @@ export default function FAQPage() {
         </section>
 
         {/* Search and Filter */}
-        <section className="py-12 border-b border-border">
+        <section className={`py-12 border-b ${isDark ? "border-gray-700" : "border-emerald-200"}`}>
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -111,14 +149,22 @@ export default function FAQPage() {
                   <input
                     type="text"
                     placeholder="Search FAQs..."
-                    className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                      isDark 
+                        ? "bg-gray-700 text-white border-gray-600 placeholder:text-gray-400 focus:ring-[#f5c542]" 
+                        : "bg-white text-gray-900 border-emerald-200 placeholder:text-gray-500 focus:ring-emerald-500"
+                    }`}
                   />
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((category) => (
                     <button
                       key={category}
-                      className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-secondary transition-colors"
+                      className={`px-4 py-2 text-sm border rounded-lg transition-colors ${
+                        isDark 
+                          ? "border-gray-700 hover:bg-gray-800 text-gray-300" 
+                          : "border-emerald-200 hover:bg-emerald-50 text-gray-700"
+                      }`}
                     >
                       {category}
                     </button>
@@ -135,22 +181,26 @@ export default function FAQPage() {
             <div className="max-w-4xl mx-auto">
               <div className="space-y-4">
                 {faqs.map((faq, index) => (
-                  <div key={index} className="bg-card border border-border rounded-lg overflow-hidden">
-                    <button className="w-full text-left p-6 hover:bg-muted/50 transition-colors focus:outline-none focus:bg-muted/50">
+                  <div key={index} className={`rounded-lg overflow-hidden ${isDark ? "bg-gray-800/50 border border-gray-700" : "bg-card border border-emerald-200"}`}>
+                    <button className={`w-full text-left p-6 transition-colors focus:outline-none ${isDark ? "hover:bg-gray-700/50 focus:bg-gray-700/50" : "hover:bg-emerald-50 focus:bg-emerald-50"}`}>
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-                          <faq.icon className="h-6 w-6 text-primary" />
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 ${
+                          isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
+                        }`}>
+                          <faq.icon className={`h-6 w-6 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded">
+                            <span className={`px-2 py-1 text-xs font-medium rounded ${
+                              isDark ? "bg-[#f5c542]/20 text-[#f5c542]" : "bg-emerald-100 text-emerald-600"
+                            }`}>
                               {faq.category}
                             </span>
-                            <h3 className="font-display text-lg font-semibold text-foreground">
+                            <h3 className={`font-display text-lg font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>
                               {faq.question}
                             </h3>
                           </div>
-                          <p className="text-muted-foreground text-sm leading-relaxed">
+                          <p className={`text-sm leading-relaxed ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                             {faq.answer}
                           </p>
                         </div>
@@ -167,51 +217,71 @@ export default function FAQPage() {
         <section className="py-20 bg-secondary/50">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-center text-foreground mb-12">
+              <h2 className={`font-display text-3xl md:text-4xl font-bold text-center mb-12 ${
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+              }`}>
                 Still Need Help?
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <MessageSquare className="h-8 w-8 text-primary" />
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                    isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
+                  }`}>
+                    <MessageSquare className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
                   </div>
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                  <h3 className={`font-display text-lg font-semibold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>
                     Live Chat Support
                   </h3>
-                  <p className="text-muted-foreground text-sm mb-4">
+                  <p className={`text-sm mb-4 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
                     Chat with our support team in real-time for immediate assistance.
                   </p>
-                  <button className="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+                  <button className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+                    isDark 
+                      ? "bg-[#f5c542] hover:bg-[#d4a938] text-gray-900" 
+                      : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  }`}>
                     Start Chat
                   </button>
                 </div>
                 
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <HelpCircle className="h-8 w-8 text-primary" />
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                    isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
+                  }`}>
+                    <HelpCircle className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
                   </div>
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                  <h3 className={`font-display text-lg font-semibold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>
                     Knowledge Base
                   </h3>
-                  <p className="text-muted-foreground text-sm mb-4">
+                  <p className={`text-sm mb-4 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
                     Browse our comprehensive knowledge base for detailed guides and tutorials.
                   </p>
-                  <button className="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+                  <button className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+                    isDark 
+                      ? "bg-[#f5c542] hover:bg-[#d4a938] text-gray-900" 
+                      : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  }`}>
                     Browse Articles
                   </button>
                 </div>
                 
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <MessageSquare className="h-8 w-8 text-primary" />
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                    isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
+                  }`}>
+                    <MessageSquare className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
                   </div>
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                  <h3 className={`font-display text-lg font-semibold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>
                     Email Support
                   </h3>
-                  <p className="text-muted-foreground text-sm mb-4">
+                  <p className={`text-sm mb-4 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
                     Send us a detailed email and we'll respond within 24 hours.
                   </p>
-                  <button className="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+                  <button className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+                    isDark 
+                      ? "bg-[#f5c542] hover:bg-[#d4a938] text-gray-900" 
+                      : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  }`}>
                     Send Email
                   </button>
                 </div>
@@ -224,17 +294,27 @@ export default function FAQPage() {
         <section className="py-16 hero-gradient">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+              <h2 className={`font-display text-3xl md:text-4xl font-bold mb-4 ${
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+              }`}>
                 Ready to Start Trading?
               </h2>
-              <p className="text-primary-foreground/80 mb-8">
+              <p className={`mb-8 ${isDark ? "text-white/90" : "text-gray-900"}`}>
                 Join thousands of successful traders who trust CompassForex.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button className="bg-background text-foreground px-8 py-3 rounded-lg font-semibold hover:bg-background/90 transition-colors">
+                <button className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
+                  isDark 
+                    ? "bg-[#f5c542] hover:bg-[#d4a938] text-gray-900" 
+                    : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                }`}>
                   Open Account
                 </button>
-                <button className="border border-primary-foreground/30 text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-primary-foreground/10 transition-colors">
+                <button className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
+                  isDark 
+                    ? "border border-[#f5c542]/30 text-[#f5c542] hover:bg-[#f5c542]/10" 
+                    : "border border-emerald-600/30 text-emerald-600 hover:bg-emerald-50"
+                }`}>
                   Try Demo Account
                 </button>
               </div>
