@@ -1,6 +1,6 @@
 "use client"
 import Layout from "@/components/Layout";
-import { BookOpen, Play, FileText, Users, Award, Clock, Shield } from "lucide-react";
+import { BookOpen, Play, FileText, Users, Award, Clock, Shield, Download, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import academymainImage from "../../assest/images/mainpageimage.png"
@@ -14,7 +14,20 @@ const courses = [
     duration: "2 hours",
     lessons: 12,
     icon: BookOpen,
-    topics: ["What is Forex", "Currency Pairs", "Pips and Spreads", "Leverage and Margin"]
+    topics: ["What is Forex", "Currency Pairs", "Pips and Spreads", "Leverage and Margin"],
+    chapters: [
+      "Introduction to Forex Markets",
+      "Understanding Currency Pairs",
+      "How Pips and Spreads Work",
+      "Leverage and Margin Explained",
+      "Market Participants",
+      "Trading Sessions",
+      "Order Types",
+      "Basic Chart Reading",
+      "Risk Management Basics",
+      "Common Trading Mistakes",
+      "Getting Started Demo"
+    ]
   },
   {
     title: "Technical Analysis",
@@ -23,7 +36,26 @@ const courses = [
     duration: "4 hours",
     lessons: 20,
     icon: Play,
-    topics: ["Chart Patterns", "Support & Resistance", "Moving Averages", "RSI & MACD"]
+    topics: ["Chart Patterns", "Support & Resistance", "Moving Averages", "RSI & MACD"],
+    chapters: [
+      "Chart Pattern Recognition",
+      "Support and Resistance Levels",
+      "Moving Averages Fundamentals",
+      "RSI and MACD Indicators",
+      "Bollinger Bands",
+      "Fibonacci Retracements",
+      "Candlestick Patterns",
+      "Volume Analysis",
+      "Trend Line Analysis",
+      "Multiple Timeframe Analysis",
+      "Price Action Trading",
+      "Chart Timeframes",
+      "Indicator Combinations",
+      "Trading Strategies",
+      "Backtesting Methods",
+      "Advanced Chart Tools",
+      "Practical Applications"
+    ]
   },
   {
     title: "Fundamental Analysis",
@@ -32,7 +64,24 @@ const courses = [
     duration: "3 hours",
     lessons: 15,
     icon: FileText,
-    topics: ["Economic Indicators", "Central Banks", "News Trading", "Market Sentiment"]
+    topics: ["Economic Indicators", "Central Banks", "News Trading", "Market Sentiment"],
+    chapters: [
+      "Economic Indicators Overview",
+      "Central Bank Policies",
+      "Interest Rate Impact",
+      "GDP and Growth Data",
+      "Inflation and CPI",
+      "Employment Data",
+      "Trade Balance Analysis",
+      "News Trading Strategies",
+      "Market Sentiment",
+      "Economic Calendar Usage",
+      "Correlation Analysis",
+      "Currency Strength",
+      "Geopolitical Factors",
+      "Seasonal Patterns",
+      "Risk Assessment"
+    ]
   },
   {
     title: "Risk Management",
@@ -41,7 +90,19 @@ const courses = [
     duration: "2.5 hours",
     lessons: 10,
     icon: Shield,
-    topics: ["Position Sizing", "Stop Loss", "Risk/Reward Ratio", "Portfolio Management"]
+    topics: ["Position Sizing", "Stop Loss", "Risk/Reward Ratio", "Portfolio Management"],
+    chapters: [
+      "Position Sizing Calculators",
+      "Stop Loss Strategies",
+      "Risk/Reward Ratios",
+      "Portfolio Diversification",
+      "Drawdown Management",
+      "Leverage Control",
+      "Account Protection",
+      "Psychology of Risk",
+      "Advanced Risk Tools",
+      "Risk Management Plans"
+    ]
   },
   {
     title: "Trading Psychology",
@@ -50,7 +111,21 @@ const courses = [
     duration: "3 hours",
     lessons: 12,
     icon: Users,
-    topics: ["Emotional Control", "Trading Discipline", "Patience", "Confidence Building"]
+    topics: ["Emotional Control", "Trading Discipline", "Patience", "Confidence Building"],
+    chapters: [
+      "Emotional Control",
+      "Trading Discipline",
+      "Patience and Timing",
+      "Confidence Building",
+      "Fear and Greed Management",
+      "Loss Acceptance",
+      "Winning Mindset",
+      "Stress Management",
+      "Decision Making Process",
+      "Goal Setting",
+      "Self-Awareness",
+      "Professional Habits"
+    ]
   },
   {
     title: "Advanced Strategies",
@@ -59,7 +134,27 @@ const courses = [
     duration: "5 hours",
     lessons: 25,
     icon: Award,
-    topics: ["Scalping", "Swing Trading", "Algorithmic Trading", "Multi-timeframe Analysis"]
+    topics: ["Scalping", "Swing Trading", "Algorithmic Trading", "Multi-timeframe Analysis"],
+    chapters: [
+      "Scalping Techniques",
+      "Swing Trading Methods",
+      "Position Trading",
+      "Algorithmic Trading Basics",
+      "Multi-Timeframe Analysis",
+      "Market Structure",
+      "Supply and Demand",
+      "Smart Money Concepts",
+      "Institutional Strategies",
+      "Advanced Risk Management",
+      "Performance Optimization",
+      "Automation Tools",
+      "Professional Trading Plans",
+      "Market Microstructure",
+      "Advanced Portfolio Management",
+      "Trading Business Setup",
+      "Performance Analysis",
+      "Continuous Improvement"
+    ]
   }
 ];
 
@@ -88,6 +183,8 @@ const resources = [
 
 export default function AcademyPage() {
   const [isDark, setIsDark] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<typeof courses[0] | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
       const updateTheme = () => {
@@ -203,8 +300,12 @@ export default function AcademyPage() {
                       isDark 
                         ? "bg-[#f5c542] hover:bg-[#d4a938] text-gray-900" 
                         : "bg-emerald-600 hover:bg-emerald-700 text-white"
-                    }`}>
-                      Start Course
+                    }`}
+                      onClick={() => {
+                        setSelectedCourse(course);
+                        setShowModal(true);
+                      }}>
+                      View Chapters
                     </button>
                   </div>
                 ))}
@@ -328,6 +429,85 @@ export default function AcademyPage() {
             </div>
           </div>
         </section>
+        
+        {/* Course Chapters Modal */}
+        {showModal && selectedCourse && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className={`absolute inset-0 ${isDark ? "bg-black/80" : "bg-black/50"}`} onClick={() => setShowModal(false)}></div>
+            <div className={`relative max-w-2xl w-full max-h-[80vh] overflow-y-auto rounded-xl p-6 ${
+              isDark ? "bg-gray-800 border border-gray-700" : "bg-white border border-emerald-200"
+            }`}>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className={`font-display text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
+                  {selectedCourse.title} - Course Chapters
+                </h2>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className={`p-2 rounded-lg transition-colors ${isDark ? "hover:bg-gray-700" : "hover:bg-emerald-50"}`}
+                >
+                  <X className={`h-5 w-5 ${isDark ? "text-gray-400" : "text-gray-600"}`} />
+                </button>
+              </div>
+              
+              <div className="space-y-2">
+                {selectedCourse.chapters.map((chapter, index) => (
+                  <div key={index} className={`flex items-center justify-between p-4 rounded-lg ${
+                    isDark ? "bg-gray-700/50 hover:bg-gray-700/70" : "bg-emerald-50 hover:bg-emerald-100"
+                  }`}>
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        isDark ? "bg-[#f5c542]/20" : "bg-emerald-200"
+                      }`}>
+                        <span className={`text-sm font-semibold ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`}>
+                          {index + 1}
+                        </span>
+                      </div>
+                      <span className={`font-medium ${isDark ? "text-white" : "text-gray-900"}`}>
+                        {chapter}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        // Download functionality - you can implement actual download logic here
+                        console.log(`Downloading chapter: ${chapter}`);
+                      }}
+                      className={`p-2 rounded-lg transition-colors ${
+                        isDark 
+                          ? "bg-[#f5c542] hover:bg-[#d4a938] text-gray-900" 
+                          : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                      }`}
+                      title={`Download ${chapter}`}
+                    >
+                      <Download className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-6 pt-4 border-t ${isDark ? "border-gray-700" : "border-emerald-200"}">
+                <div className="flex items-center justify-between">
+                  <div className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+                    Total: {selectedCourse.chapters.length} chapters • {selectedCourse.duration} total duration
+                  </div>
+                  <button
+                    onClick={() => {
+                      // Download all chapters functionality
+                      console.log(`Downloading all chapters for: ${selectedCourse.title}`);
+                    }}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                      isDark 
+                        ? "bg-[#f5c542] hover:bg-[#d4a938] text-gray-900" 
+                        : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                    }`}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Download All
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
