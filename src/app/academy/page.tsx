@@ -484,7 +484,7 @@ export default function AcademyPage() {
                 ))}
               </div>
               
-              <div className="mt-6 pt-4 border-t ${isDark ? "border-gray-700" : "border-emerald-200"}">
+              <div className={`mt-6 pt-4 border-t ${isDark ? "border-gray-700" : "border-emerald-200"}`}>
                 <div className="flex items-center justify-between">
                   <div className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
                     Total: {selectedCourse.chapters.length} chapters • {selectedCourse.duration} total duration
