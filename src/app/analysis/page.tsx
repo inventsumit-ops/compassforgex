@@ -1,6 +1,6 @@
 "use client"
 import Layout from "@/components/Layout";
-import { BarChart3, TrendingUp, TrendingDown, Calendar, Eye } from "lucide-react";
+import { BarChart3, TrendingUp, TrendingDown, Calendar, Eye, CheckCircle, AlertCircle, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import analysismainImage from "../../assest/images/mainpageimage.png"
@@ -44,6 +44,7 @@ const upcomingEvents = [
     date: "Today",
     time: "14:30 GMT",
     currency: "USD",
+    currencyFlag: "🇺🇸",
     event: "FOMC Statement",
     impact: "High",
     forecast: "Rate hike 25bps",
@@ -53,6 +54,7 @@ const upcomingEvents = [
     date: "Tomorrow", 
     time: "09:00 GMT",
     currency: "EUR",
+    currencyFlag: "🇪🇺",
     event: "ECB Interest Rate Decision",
     impact: "High",
     forecast: "No change",
@@ -62,10 +64,41 @@ const upcomingEvents = [
     date: "Tomorrow",
     time: "12:30 GMT", 
     currency: "GBP",
+    currencyFlag: "🇬🇧",
     event: "UK CPI Data",
     impact: "Medium",
     forecast: "6.5%",
     previous: "6.8%"
+  },
+  {
+    date: "Dec 15",
+    time: "08:30 GMT",
+    currency: "USD",
+    currencyFlag: "🇺🇸",
+    event: "Core PCE Price Index",
+    impact: "High",
+    forecast: "4.6%",
+    previous: "4.7%"
+  },
+  {
+    date: "Dec 15",
+    time: "13:30 GMT",
+    currency: "CAD",
+    currencyFlag: "🇨🇦",
+    event: "CPI Data",
+    impact: "Medium",
+    forecast: "3.1%",
+    previous: "3.2%"
+  },
+  {
+    date: "Dec 16",
+    time: "06:00 GMT",
+    currency: "JPY",
+    currencyFlag: "🇯🇵",
+    event: "Industrial Production",
+    impact: "Low",
+    forecast: "-0.2%",
+    previous: "0.3%"
   }
 ];
 
@@ -124,124 +157,217 @@ export default function AnalysisPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <h2 className={`font-display text-3xl md:text-4xl font-bold mb-12 ${
-                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-black"
               }`}>
                 Latest Market Analysis
               </h2>
               
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {analysisData.map((analysis, index) => (
-                  <article key={index} className={`rounded-xl p-6 transition-shadow ${
-                    isDark ? "bg-gray-800/50 border border-gray-700 hover:shadow-lg" : "bg-card border border-emerald-200 hover:shadow-md"
-                  }`}>
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+              <div className="overflow-x-auto pb-4">
+                <div className="flex gap-6 min-w-max">
+                  {analysisData.map((analysis, index) => (
+                    <article key={index} className={`w-80 rounded-xl p-6 transition-shadow shrink-0 ${
+                      isDark ? "bg-gray-900/70 border border-[#f5c542]/30 hover:shadow-xl hover:shadow-[#f5c542]/10" : "bg-white border border-gray-200 hover:shadow-md"
+                    }`}>
+                      {/* Tags Row */}
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           analysis.type === 'Technical' 
-                            ? (isDark ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-100 text-blue-800')
-                            : (isDark ? 'bg-emerald-900/30 text-emerald-300' : 'bg-emerald-100 text-emerald-800')
+                            ? (isDark ? 'bg-[#f5c542] text-gray-900' : 'bg-green-500 text-white')
+                            : (isDark ? 'bg-gray-700 text-white' : 'bg-gray-500 text-white')
                         }`}>
                           {analysis.type}
                         </span>
-                        <span className={`text-xs ${isDark ? "text-gray-400" : "text-gray-600"}`}>{analysis.timeframe}</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          isDark ? "bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-700"
+                        }`}>
+                          {analysis.timeframe}
+                        </span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          analysis.trend === 'bullish' 
+                            ? 'bg-green-500 text-white'
+                            : analysis.trend === 'bearish' 
+                              ? 'bg-red-500 text-white'
+                              : (isDark ? 'bg-[#f5c542] text-gray-900' : 'bg-orange-500 text-white')
+                        }`}>
+                          {analysis.trend === 'bullish' ? 'Bullish' : analysis.trend === 'bearish' ? 'Bearish' : 'Neutral'}
+                        </span>
                       </div>
-                      <span className={`flex items-center gap-1 text-xs font-medium ${
-                        analysis.trend === 'bullish' 
-                          ? (isDark ? "text-green-400" : "text-green-600") 
-                          : analysis.trend === 'bearish' 
-                            ? (isDark ? "text-red-400" : "text-red-600")
-                            : (isDark ? "text-gray-400" : "text-gray-600")
-                      }`}>
-                        {analysis.trend === 'bullish' ? (
-                          <TrendingUp className="h-3 w-3" />
-                        ) : analysis.trend === 'bearish' ? (
-                          <TrendingDown className="h-3 w-3" />
-                        ) : (
-                          <div className={`h-3 w-3 rounded-full ${isDark ? "bg-gray-600" : "bg-gray-400"}`} />
+                      
+                      {/* Title */}
+                      <h3 className={`font-display text-xl font-bold mb-3 ${isDark ? "text-[#f5c542]" : "text-gray-900"}`}>
+                        {analysis.title}
+                      </h3>
+                      
+                      {/* Description */}
+                      <p className={`text-sm leading-relaxed mb-4 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
+                        {analysis.summary}
+                      </p>
+                      
+                      {/* Key Points with Icons */}
+                      <div className="mb-4">
+                        <ul className="space-y-2">
+                          {analysis.keyPoints.map((point, pointIndex) => (
+                            <li key={pointIndex} className={`flex items-center text-sm ${isDark ? "text-gray-300" : "text-gray-600"}`}>
+                              {analysis.trend === 'bullish' ? (
+                                <CheckCircle className={`h-4 w-4 mr-2 shrink-0 ${isDark ? "text-[#f5c542]" : "text-green-500"}`} />
+                              ) : analysis.trend === 'bearish' ? (
+                                <XCircle className={`h-4 w-4 mr-2 shrink-0 ${isDark ? "text-red-400" : "text-red-500"}`} />
+                              ) : (
+                                <AlertCircle className={`h-4 w-4 mr-2 shrink-0 ${isDark ? "text-[#f5c542]" : "text-orange-500"}`} />
+                              )}
+                              {point}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      {/* Visual Element */}
+                      <div className="mb-4 h-24 flex items-center justify-center">
+                        {index === 0 && (
+                          /* EUR/USD - Blue upward trending line */
+                          <div className="relative w-full h-full">
+                            <svg viewBox="0 0 200 80" className="w-full h-full">
+                              <polyline
+                                points="10,60 40,50 70,45 100,30 130,25 160,15 190,10"
+                                fill="none"
+                                stroke={isDark ? "#f5c542" : "#3B82F6"}
+                                strokeWidth="2"
+                              />
+                              <polygon points="185,5 195,10 185,15" fill={isDark ? "#f5c542" : "#3B82F6"} />
+                              <circle cx="190" cy="10" r="3" fill={isDark ? "#f5c542" : "#10B981"} />
+                            </svg>
+                          </div>
                         )}
-                        {analysis.trend}
-                      </span>
-                    </div>
-                    
-                    <h3 className={`font-display text-lg font-semibold mb-3 ${isDark ? "text-white" : "text-gray-900"}`}>
-                      {analysis.title}
-                    </h3>
-                    
-                    <p className={`text-sm leading-relaxed mb-4 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
-                      {analysis.summary}
-                    </p>
-                    
-                    <div className="mb-4">
-                      <h4 className={`font-display text-sm font-semibold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>Key Points:</h4>
-                      <ul className="space-y-1">
-                        {analysis.keyPoints.map((point, pointIndex) => (
-                          <li key={pointIndex} className={`flex items-start text-sm ${isDark ? "text-gray-300" : "text-gray-600"}`}>
-                            <div className={`w-1.5 h-1.5 rounded-full mr-2 mt-1.5 ${isDark ? "bg-[#f5c542]" : "bg-emerald-600"}`}></div>
-                            {point}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className={`flex items-center justify-between text-xs pt-4 border-t ${isDark ? "text-gray-400 border-gray-700" : "text-gray-600 border-emerald-200"}`}>
-                      <span>By {analysis.author}</span>
-                      <span>{analysis.time}</span>
-                    </div>
-                  </article>
-                ))}
+                        {index === 1 && (
+                          /* USD - Green bar chart */
+                          <div className="relative w-full h-full">
+                            <svg viewBox="0 0 200 80" className="w-full h-full">
+                              <rect x="20" y="50" width="20" height="30" fill={isDark ? "#f5c542" : "#10B981"} />
+                              <rect x="50" y="40" width="20" height="40" fill={isDark ? "#f5c542" : "#10B981"} />
+                              <rect x="80" y="30" width="20" height="50" fill={isDark ? "#f5c542" : "#10B981"} />
+                              <rect x="110" y="25" width="20" height="55" fill={isDark ? "#f5c542" : "#10B981"} />
+                              <rect x="140" y="20" width="20" height="60" fill={isDark ? "#f5c542" : "#10B981"} />
+                            </svg>
+                          </div>
+                        )}
+                        {index === 2 && (
+                          /* GBP/USD - Red downward trending lines */
+                          <div className="relative w-full h-full">
+                            <svg viewBox="0 0 200 80" className="w-full h-full">
+                              <polyline
+                                points="10,20 40,30 70,35 100,50 130,55 160,65 190,70"
+                                fill="none"
+                                stroke={isDark ? "#f5c542" : "#EF4444"}
+                                strokeWidth="2"
+                              />
+                              <polygon points="185,75 195,70 185,65" fill={isDark ? "#f5c542" : "#EF4444"} />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Footer */}
+                      <div className={`flex items-center justify-between text-xs pt-4 border-t ${isDark ? "text-[#f5c542]/80 border-[#f5c542]/20" : "text-gray-600 border-gray-200"}`}>
+                        <span>By {analysis.author}</span>
+                        <span>{analysis.time}</span>
+                      </div>
+                    </article>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Economic Calendar */}
-        <section className="py-20 bg-secondary/50">
+        <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <h2 className={`font-display text-3xl md:text-4xl font-bold mb-12 ${
-                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-black"
               }`}>
                 Upcoming Economic Events
               </h2>
               
-              <div className={`rounded-xl overflow-hidden ${
-                isDark ? "bg-gray-800/50 border border-gray-700" : "bg-card border border-emerald-200"
+              <div className={`rounded-xl overflow-hidden border ${
+                isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
               }`}>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className={isDark ? "bg-gray-900/50" : "bg-emerald-50"}>
-                        <th className={`text-left p-4 text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>Date</th>
-                        <th className={`text-left p-4 text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>Time</th>
-                        <th className={`text-left p-4 text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>Currency</th>
-                        <th className={`text-left p-4 text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>Event</th>
-                        <th className={`text-left p-4 text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>Impact</th>
-                        <th className={`text-left p-4 text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>Forecast</th>
-                        <th className={`text-left p-4 text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>Previous</th>
+                      <tr className={`border-b ${
+                        isDark ? "bg-gray-900/50 border-gray-700" : "bg-gray-50 border-gray-200"
+                      }`}>
+                        <th className={`text-left p-4 text-sm font-semibold ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}>Date</th>
+                        <th className={`text-left p-4 text-sm font-semibold ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}>Time</th>
+                        <th className={`text-left p-4 text-sm font-semibold ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}>Currency</th>
+                        <th className={`text-left p-4 text-sm font-semibold ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}>Event</th>
+                        <th className={`text-left p-4 text-sm font-semibold ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}>Impact</th>
+                        <th className={`text-left p-4 text-sm font-semibold ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}>Forecast</th>
+                        <th className={`text-left p-4 text-sm font-semibold ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}>Previous</th>
                       </tr>
                     </thead>
                     <tbody>
                       {upcomingEvents.map((event, index) => (
-                        <tr key={index} className={`border-t transition-colors ${
-                          isDark ? "border-gray-700 hover:bg-gray-700/30" : "border-emerald-200 hover:bg-emerald-50"
+                        <tr key={index} className={`border-b transition-colors ${
+                          isDark ? "border-gray-700 hover:bg-gray-700/30" : "border-gray-100 hover:bg-gray-50"
                         }`}>
-                          <td className={`p-4 text-sm ${isDark ? "text-gray-300" : "text-gray-900"}`}>{event.date}</td>
-                          <td className={`p-4 text-sm ${isDark ? "text-gray-300" : "text-gray-900"}`}>{event.time}</td>
-                          <td className={`p-4 text-sm font-semibold ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`}>{event.currency}</td>
-                          <td className={`p-4 text-sm ${isDark ? "text-gray-300" : "text-gray-900"}`}>{event.event}</td>
+                          <td className={`p-4 text-sm font-medium ${
+                            isDark ? "text-gray-200" : "text-gray-900"
+                          }`}>
+                            {event.date}
+                          </td>
+                          <td className={`p-4 text-sm ${
+                            isDark ? "text-gray-300" : "text-gray-600"
+                          }`}>
+                            {event.time}
+                          </td>
+                          <td className={`p-4 text-sm font-semibold ${
+                            isDark ? "text-gray-200" : "text-gray-900"
+                          }`}>
+                            <span className="mr-2 text-lg">{event.currencyFlag}</span>
+                            {event.currency}
+                          </td>
+                          <td className={`p-4 text-sm ${
+                            isDark ? "text-gray-300" : "text-gray-700"
+                          }`}>
+                            {event.event}
+                          </td>
                           <td className="p-4">
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                               event.impact === 'High' 
-                                ? (isDark ? 'bg-red-900/30 text-red-300' : 'bg-red-100 text-red-800')
+                                ? 'bg-green-100 text-green-800'
                                 : event.impact === 'Medium' 
-                                  ? (isDark ? 'bg-yellow-900/30 text-yellow-300' : 'bg-yellow-100 text-yellow-800')
-                                  : (isDark ? 'bg-green-900/30 text-green-300' : 'bg-green-100 text-green-800')
+                                  ? 'bg-orange-100 text-orange-800'
+                                  : 'bg-blue-100 text-blue-800'
                             }`}>
                               {event.impact}
                             </span>
                           </td>
-                          <td className={`p-4 text-sm ${isDark ? "text-gray-300" : "text-gray-900"}`}>{event.forecast}</td>
-                          <td className={`p-4 text-sm ${isDark ? "text-gray-300" : "text-gray-900"}`}>{event.previous}</td>
+                          <td className={`p-4 text-sm font-medium ${
+                            isDark ? "text-gray-300" : "text-gray-700"
+                          }`}>
+                            {event.forecast}
+                          </td>
+                          <td className={`p-4 text-sm font-medium ${
+                            isDark ? "text-gray-300" : "text-gray-700"
+                          }`}>
+                            {event.previous}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -255,51 +381,119 @@ export default function AnalysisPage() {
         {/* Features */}
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               <h2 className={`font-display text-3xl md:text-4xl font-bold text-center mb-12 ${
-                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-black"
               }`}>
                 Our Analysis Features
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                    isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
-                  }`}>
-                    <BarChart3 className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
+                <div className={`relative p-8 rounded-2xl border-2 transition-all hover:shadow-lg ${
+                  isDark 
+                    ? "bg-gray-800 border-[#f5c542]/30 hover:border-[#f5c542]/50" 
+                    : "bg-white border-emerald-200 hover:border-emerald-400"
+                }`}>
+                  {/* Wave Pattern */}
+                  <div className="absolute bottom-0 right-0 w-24 h-24 opacity-10">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                      <path
+                        d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z"
+                        fill={isDark ? "#f5c542" : "#10b981"}
+                      />
+                    </svg>
                   </div>
-                  <h3 className={`font-display text-lg font-semibold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>
-                    Technical Analysis
-                  </h3>
-                  <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-                    Advanced chart patterns, indicators, and trading signals from expert technical analysts.
-                  </p>
+                  
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 mr-6 ${
+                      isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
+                    }`}>
+                      <BarChart3 className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className={`font-display text-xl font-bold mb-4 ${
+                        isDark ? "text-white" : "text-gray-900"
+                      }`}>
+                        Technical Analysis
+                      </h3>
+                      <p className={`text-sm leading-relaxed ${
+                        isDark ? "text-gray-300" : "text-gray-600"
+                      }`}>
+                        Advanced chart patterns, indicators, and trading signals from expert technical analysts.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                    isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
-                  }`}>
-                    <TrendingUp className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
+                
+                <div className={`relative p-8 rounded-2xl border-2 transition-all hover:shadow-lg ${
+                  isDark 
+                    ? "bg-gray-800 border-[#f5c542]/30 hover:border-[#f5c542]/50" 
+                    : "bg-white border-emerald-200 hover:border-emerald-400"
+                }`}>
+                  {/* Wave Pattern */}
+                  <div className="absolute bottom-0 right-0 w-24 h-24 opacity-10">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                      <path
+                        d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z"
+                        fill={isDark ? "#f5c542" : "#10b981"}
+                      />
+                    </svg>
                   </div>
-                  <h3 className={`font-display text-lg font-semibold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>
-                    Market Trends
-                  </h3>
-                  <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-                    Real-time identification of market trends and potential trading opportunities.
-                  </p>
+                  
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 mr-6 ${
+                      isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
+                    }`}>
+                      <TrendingUp className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className={`font-display text-xl font-bold mb-4 ${
+                        isDark ? "text-white" : "text-gray-900"
+                      }`}>
+                        Market Trends
+                      </h3>
+                      <p className={`text-sm leading-relaxed ${
+                        isDark ? "text-gray-300" : "text-gray-600"
+                      }`}>
+                        Real-time identification of market trends and potential trading opportunities.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                    isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
-                  }`}>
-                    <Calendar className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
+                
+                <div className={`relative p-8 rounded-2xl border-2 transition-all hover:shadow-lg ${
+                  isDark 
+                    ? "bg-gray-800 border-[#f5c542]/30 hover:border-[#f5c542]/50" 
+                    : "bg-white border-emerald-200 hover:border-emerald-400"
+                }`}>
+                  {/* Wave Pattern */}
+                  <div className="absolute bottom-0 right-0 w-24 h-24 opacity-10">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                      <path
+                        d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z"
+                        fill={isDark ? "#f5c542" : "#10b981"}
+                      />
+                    </svg>
                   </div>
-                  <h3 className={`font-display text-lg font-semibold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>
-                    Economic Calendar
-                  </h3>
-                  <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-                    Comprehensive economic calendar with impact analysis and market expectations.
-                  </p>
+                  
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 mr-6 ${
+                      isDark ? "bg-[#f5c542]/20" : "bg-emerald-100"
+                    }`}>
+                      <Calendar className={`h-8 w-8 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className={`font-display text-xl font-bold mb-4 ${
+                        isDark ? "text-white" : "text-gray-900"
+                      }`}>
+                        Economic Calendar
+                      </h3>
+                      <p className={`text-sm leading-relaxed ${
+                        isDark ? "text-gray-300" : "text-gray-600"
+                      }`}>
+                        Comprehensive economic calendar with impact analysis and market expectations.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -311,11 +505,11 @@ export default function AnalysisPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className={`font-display text-3xl md:text-4xl font-bold mb-4 ${
-                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-black"
               }`}>
                 Stay Informed
               </h2>
-              <p className={`mb-8 ${isDark ? "text-white/90" : "text-gray-900"}`}>
+              <p className={`mb-8 ${isDark ? "text-white/90" : "text-black"}`}>
                 Get daily analysis and market insights delivered to your inbox.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
