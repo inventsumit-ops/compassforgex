@@ -19,7 +19,7 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-sm font-semibold text-foreground mb-4">Trading</h4>
             <div className="flex flex-col gap-2">
-              <Link href="/trading" className="text-sm text-muted-foreground hover:text-primary transition-colors">Forex Trading</Link>
+              <Link href="/platform" className="text-sm text-muted-foreground hover:text-primary transition-colors">Forex Trading</Link>
               <Link href="/currency-pairs" className="text-sm text-muted-foreground hover:text-primary transition-colors">Currency Pairs</Link>
               <Link href="/signals" className="text-sm text-muted-foreground hover:text-primary transition-colors">Trading Signals</Link>
               <Link href="/tools" className="text-sm text-muted-foreground hover:text-primary transition-colors">Trading Tools</Link>

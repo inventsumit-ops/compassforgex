@@ -80,50 +80,87 @@ export default function CurrencyPairsPage() {
         {/* Major Pairs */}
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              <h2 className={`font-display text-3xl md:text-4xl font-bold mb-4 ${
-                isDark ? "text-[#f5c542] drop-shadow-lg" : "text-emerald-900"
+            <div className="max-w-4xl mx-auto">
+              <div className={`rounded-xl shadow-lg p-6 ${
+                isDark ? "bg-gray-800/50 border border-gray-700" : "bg-white border border-gray-200"
               }`}>
-                Major Currency Pairs
-              </h2>
-              <p className={`text-center max-w-2xl mx-auto mb-12 ${
-                isDark ? "text-white/90" : "text-gray-900"
-              }`}>
-                The most traded currency pairs in the world with tightest spreads.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {majorPairs.map((pair, index) => (
-                  <div key={index} className={`rounded-lg p-4 transition-shadow ${
-                    isDark ? "bg-gray-800/50 border border-gray-700 hover:shadow-lg" : "bg-card border border-emerald-200 hover:shadow-md"
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className={`font-display text-2xl font-bold ${
+                    isDark ? "text-white" : "text-gray-900"
                   }`}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <DollarSign className={`h-5 w-5 ${isDark ? "text-[#f5c542]" : "text-emerald-600"}`} />
-                        <span className={`font-display text-lg font-bold ${isDark ? "text-white" : "text-gray-900"}`}>
-                          {pair.symbol}
-                        </span>
-                      </div>
-                      <div className={`flex items-center gap-1 text-sm font-medium ${
-                        pair.change.startsWith('+') 
-                          ? (isDark ? "text-green-400" : "text-green-600") 
-                          : (isDark ? "text-red-400" : "text-red-600")
-                      }`}>
-                        {pair.change.startsWith('+') ? (
-                          <TrendingUp className="h-4 w-4" />
-                        ) : (
-                          <TrendingDown className="h-4 w-4" />
-                        )}
-                        {pair.change}
+                    Major Currency Pairs
+                  </h2>
+                  <button className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isDark 
+                      ? "bg-[#f5c542] hover:bg-[#d4a938] text-gray-900" 
+                      : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  }`}>
+                    Spread
+                  </button>
+                </div>
+
+                {/* Currency Pairs List */}
+                <div className="space-y-4">
+                  {majorPairs.map((pair, index) => (
+                    <div key={index} className={`rounded-lg p-4 transition-shadow ${
+                      isDark ? "bg-gray-700/50 border border-gray-600 hover:shadow-md" : "bg-gray-50 border border-gray-200 hover:shadow-sm"
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          {/* Currency Flags */}
+                          <div className="flex items-center gap-2">
+                            <div className={`w-8 h-6 rounded-sm flex items-center justify-center text-xs font-bold ${
+                              isDark ? "bg-blue-600 text-white" : "bg-blue-500 text-white"
+                            }`}>
+                              {pair.symbol.split('/')[0].substring(0, 2)}
+                            </div>
+                            <div className={`w-8 h-6 rounded-sm flex items-center justify-center text-xs font-bold ${
+                              isDark ? "bg-red-600 text-white" : "bg-red-500 text-white"
+                            }`}>
+                              {pair.symbol.split('/')[1].substring(0, 2)}
+                            </div>
+                          </div>
+                          
+                          {/* Currency Info */}
+                          <div>
+                            <div className={`flex items-center gap-2 mb-1`}>
+                              <span className={`font-display text-lg font-bold ${
+                                isDark ? "text-white" : "text-gray-900"
+                              }`}>
+                                {pair.symbol}
+                              </span>
+                              <div className={`flex items-center gap-1 text-sm font-medium ${
+                                pair.change.startsWith('+') 
+                                  ? (isDark ? "text-green-400" : "text-green-600") 
+                                  : (isDark ? "text-red-400" : "text-red-600")
+                              }`}>
+                                {pair.change.startsWith('+') ? (
+                                  <TrendingUp className="h-4 w-4" />
+                                ) : (
+                                  <TrendingDown className="h-4 w-4" />
+                                )}
+                                {pair.change}
+                              </div>
+                            </div>
+                            <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+                              {pair.name}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Spread Button */}
+                        <button className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          isDark 
+                            ? "bg-gray-600 hover:bg-gray-500 text-white" 
+                            : "bg-white hover:bg-gray-100 text-gray-900 border border-gray-300"
+                        }`}>
+                          {pair.spread}
+                        </button>
                       </div>
                     </div>
-                    <p className={`text-sm mb-2 ${isDark ? "text-gray-400" : "text-gray-600"}`}>{pair.name}</p>
-                    <div className="flex items-center justify-between">
-                      <span className={`text-xs ${isDark ? "text-gray-500" : "text-gray-600"}`}>Spread</span>
-                      <span className={`text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"}`}>{pair.spread}</span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
